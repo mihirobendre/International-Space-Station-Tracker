@@ -95,6 +95,61 @@ def epochs_general():
     
     return data
 
+@app.route('/comment', methods = ['GET'])
+def print_comment():
+    response = requests.get(url = 'https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml')
+    status_code = response.status_code
+
+    if status_code == 200:
+        logger.info("Successfully fetched data")
+    else:
+        logger.error("Failed to fetch data")
+
+    full_data_xml = response.content
+
+    full_data_dicts = xmltodict.parse(full_data_xml)
+
+    # now, printing statement about the range of data from 1st and last epochs
+    comment = full_data_dicts['ndm']['oem']['body']['segment']['data']['COMMENT']
+
+    return comment
+
+@app.route('/header', methods = ['GET'])
+def print_header():
+    response = requests.get(url = 'https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml')
+    status_code = response.status_code
+
+    if status_code == 200:
+        logger.info("Successfully fetched data")
+    else:
+        logger.error("Failed to fetch data")
+
+    full_data_xml = response.content
+
+    full_data_dicts = xmltodict.parse(full_data_xml)
+
+    # now, printing statement about the range of data from 1st and last epochs
+    header = full_data_dicts['ndm']['oem']['header']
+    return header
+
+@app.route('/metadata', methods = ['GET'])
+def print_metadata():
+    response = requests.get(url = 'https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml')
+    status_code = response.status_code
+
+    if status_code == 200:
+        logger.info("Successfully fetched data")
+    else:
+        logger.error("Failed to fetch data")
+
+    full_data_xml = response.content
+
+    full_data_dicts = xmltodict.parse(full_data_xml)
+
+    # now, printing statement about the range of data from 1st and last epochs
+    metadata = full_data_dicts['ndm']['oem']['body']['segment']['metadata']
+
+    return metadata
 
 @app.route('/epochs/<epoch>',methods = ['GET'])
 def specific_epoch(epoch):
@@ -109,7 +164,6 @@ def specific_epoch(epoch):
         Union[Dict[str, Any], str]: A dictionary containing the ISS coordinates data for the specified epoch,
                                     or a string indicating that the epoch was not found.
     """
-
 
     data = get_data()
     for item in data:
@@ -141,6 +195,7 @@ def specific_epoch_speed(epoch):
             return str(speed) + '\n'
 
     return "Epoch not found"
+
 
 @app.route('/now',methods = ['GET'])
 def epoch_and_speed_now():
