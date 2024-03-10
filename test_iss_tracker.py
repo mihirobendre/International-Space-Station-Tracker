@@ -72,3 +72,8 @@ def test_get_stateVector():
     assert parsed_sv[0]["X_DOT"]['#text'] == '7'
     assert parsed_sv[0]["Y_DOT"]['#text'] == '8'
     assert parsed_sv[0]["Z_DOT"]['#text'] == '9'
+
+epoch = '2024-068T12:00:00.000Z'
+
+def test_location_info(epoch):
+    assert location_info(epoch) == 'hello'
