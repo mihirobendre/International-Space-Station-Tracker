@@ -250,17 +250,7 @@ def print_comment():
     '''
     Prints comment string from data
     '''
-    response = requests.get(url = 'https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml')
-    status_code = response.status_code
-
-    if status_code == 200:
-        logger.info("Successfully fetched data")
-    else:
-        logger.error("Failed to fetch data")
-
-    full_data_xml = response.content
-
-    full_data_dicts = xmltodict.parse(full_data_xml)
+    full_data_dicts = fetch_all_data
 
     # now, printing statement about the range of data from 1st and last epochs
     comment = full_data_dicts['ndm']['oem']['body']['segment']['data']['COMMENT']
@@ -272,17 +262,9 @@ def print_header():
     '''
     Prints header string
     '''
-    response = requests.get(url = 'https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml')
-    status_code = response.status_code
+    
 
-    if status_code == 200:
-        logger.info("Successfully fetched data")
-    else:
-        logger.error("Failed to fetch data")
-
-    full_data_xml = response.content
-
-    full_data_dicts = xmltodict.parse(full_data_xml)
+    full_data_dicts = fetch_all_data()
 
     # now, printing statement about the range of data from 1st and last epochs
     header = full_data_dicts['ndm']['oem']['header']
