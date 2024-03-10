@@ -80,4 +80,4 @@ def epoch():
     return '2024-068T12:00:00.000Z'
 
 def test_location_info(epoch):
-    assert location_info(epoch) == 'Hello World'
+    assert jsonify(location_info(epoch))['altitude'] == 10
