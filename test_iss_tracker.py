@@ -113,6 +113,11 @@ def test_print_comment():
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
+def test_print_header():
+    response = requests.get('http://localhost:5000/header')
+    assert response.status_code == 200
+    assert isinstance(response.json(), dict)
+
 
 
     
