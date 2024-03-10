@@ -67,7 +67,7 @@ def xml_data_parser(full_data_xml):
 
     full_data_dicts = xmltodict.parse(full_data_xml)
 
-    return full_data_dicts
+    return jsonify(full_data_dicts)
 
 def get_stateVector():
     #fetching and parsing the data

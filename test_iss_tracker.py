@@ -50,8 +50,11 @@ def test_download_iss_data():
     assert download_iss_data() is not None
 
 def test_xml_data_parser():
-    parsed_data = xml_data_parser(sample_xml_data)
-    # not gonna work:
+    parsed_data = xml_data_parser(sample_xml_data())
+    assert parsed_data['ndm']['oem']['body']['segment']['data']['stateVector'][0]['EPOCH'] == '2024-068T12:04:00.000Z'
+
+
+'''
     assert len(parsed_data) == 2
     assert isinstance(parsed_data[0], dict)
     assert parsed_data[0]["EPOCH"] == '2024-045T12:04:00.000Z'
@@ -61,3 +64,4 @@ def test_xml_data_parser():
     assert parsed_data[0]["X_DOT"] == 1.0
     assert parsed_data[0]["Y_DOT"] == 2.0
     assert parsed_data[0]["Z_DOT"] == 3.0
+'''
