@@ -61,7 +61,7 @@ def test_download_iss_data():
 def test_xml_data_parser():
     parsed_data = xml_data_parser(sample_xml_data)
     assert parsed_data['ndm']['oem']['body']['segment']['data']['stateVector'][0]['EPOCH'] == '2024-068T12:00:00.000Z'
-    #['oem']['body']['segment']['data']['stateVector'][0]['EPOCH']
+    assert parsed_data['ndm']['oem']['body']['segment']['metadata']['OBJECT_NAME'] == 'ISS'
 
 '''
     assert len(parsed_data) == 2
