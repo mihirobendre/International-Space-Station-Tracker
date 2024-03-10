@@ -47,7 +47,7 @@ BASE_URL = 'http://localhost:5000'
 
 
 def test_download_iss_data():
-    assert download_iss_data(url) is not None
+    assert download_iss_data() is not None
 
 def test_xml_data_parser():
     parsed_data = xml_data_parser(sample_xml_data)

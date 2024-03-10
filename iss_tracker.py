@@ -58,13 +58,12 @@ def download_iss_data():
 
     return full_data_xml
 
-def xml_data_parser():
+def xml_data_parser(full_data_xml):
     '''
     Converting xml data into list of dictionaries.
     Args: requires xml data to begin with
     Returns: list of dicts, of all the ISS data converted to to dictionary list (from xml format)
     '''
-    full_data_xml = download_iss_data()
 
     full_data_dicts = xmltodict.parse(full_data_xml)
 
@@ -77,7 +76,7 @@ def get_stateVector():
     Returns: a list of dictionaries containing the state vectors of the ISS at different epochs.
     """
 
-    full_data_dicts = xml_data_parser()
+    full_data_dicts = xml_data_parser(download_iss_data())
 
     # now, printing statement about the range of data from 1st and last epochs
     stateVector = full_data_dicts['ndm']['oem']['body']['segment']['data']['stateVector']
@@ -262,7 +261,7 @@ def print_comment():
     '''
     Prints comment string from data
     '''
-    full_data_dicts = xml_data_parser()
+    full_data_dicts = xml_data_parser(download_iss_data())
 
     # now, printing statement about the range of data from 1st and last epochs
     comment = full_data_dicts['ndm']['oem']['body']['segment']['data']['COMMENT']
@@ -276,7 +275,7 @@ def print_header():
     '''
     
 
-    full_data_dicts = xml_data_parser()
+    full_data_dicts = xml_data_parser(download_iss_data())
 
     # now, printing statement about the range of data from 1st and last epochs
     header = full_data_dicts['ndm']['oem']['header']
@@ -287,7 +286,7 @@ def print_metadata():
     '''
     Prints metadata string
     '''
-    full_data_dicts = xml_data_parser()
+    full_data_dicts = xml_data_parser(download_iss_data())
 
     # now, printing statement about the range of data from 1st and last epochs
     metadata = full_data_dicts['ndm']['oem']['body']['segment']['metadata']
