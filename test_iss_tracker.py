@@ -164,7 +164,7 @@ def test_epochs_epoch_location_route():
         assert 'latitude' in response2.json()
         assert 'longitude' in response2.json()
         assert 'altitude' in response2.json()
-        assert 'geoposition' in response2.json()
+        assert 'geolocation' in response2.json()
 
 # Test function for the /now route
 def test_now_route():
@@ -173,7 +173,7 @@ def test_now_route():
     assert 'latitude' in response.json()
     assert 'longitude' in response.json()
     assert 'altitude' in response.json()
-    assert 'geoposition' in response.json()
+    assert 'geolocation' in response.json()
 
 
 
