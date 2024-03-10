@@ -2,6 +2,10 @@
 from iss_tracker import speed_calculator, download_iss_data, xml_data_parser, get_stateVector, location_info, specific_epoch_speed, calculate_closest_datapoint_to_now
 import requests
 import pytest
+from datetime import datetime
+import math
+
+
 
 def test_speed_calculator():
     assert speed_calculator(1,2,3) == 3.7416573867739413
@@ -87,3 +91,13 @@ def test_location_info(epoch):
 
 def test_specific_epoch_speed(epoch):
     assert specific_epoch_speed(epoch) == '7.6516394881106065'
+
+test_datetime = datetime(2024, 3, 8, 12, 0, 0)
+
+def test_closest_datapoint_to_now(sample_xml_data, test_datetime):
+    closest_index = calculate_closest_datapoint_to_now(sample_xml_data, test_datetime)
+    assert closest_index == 0
+
+
+    
+

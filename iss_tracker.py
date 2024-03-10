@@ -149,22 +149,18 @@ def specific_epoch_speed(epoch):
 
     return "Epoch not found"
 
-def calculate_closest_datapoint_to_now():
+def calculate_closest_datapoint_to_now(iss_data, current_date_and_time):
     '''
     General function for calculating the closest datapoint to now (time series data)
     Returns: the index of this datapoint within stateVector
     '''
-    stateVector = get_stateVector(download_iss_data())
-
-    # then, print full epoch closest to now
-    current_date = datetime.now().date()
-    print("Current date: ", current_date)
+    stateVector = get_stateVector(iss_data)
 
     # Specific date
-    year_first_day = datetime(datetime.now().year, 1, 1)
+    year_first_day = datetime(current_date.year, 1, 1)
 
     # Current date
-    current_date_and_time = datetime.now()
+    current_date = current_date_and_time.date()
     print("Current date and time: ", current_date_and_time)
     current_hour = int(str(current_date_and_time)[11:13])
     current_min = int(str(current_date_and_time)[14:16])
@@ -206,7 +202,6 @@ def calculate_closest_datapoint_to_now():
             min_difference = difference
 
             closest_value_index = index_of_min_in_list
-
 
     return closest_value_index
 
@@ -342,8 +337,10 @@ def return_now_info():
     Returns:
         str: A string representing the closest epoch to the current time and the instantaneous speed at that epoch.
     """
+    iss_data = download_iss_data()
+    current_date_and_time = datetime.now()
 
-    closest_value_index = calculate_closest_datapoint_to_now()
+    closest_value_index = calculate_closest_datapoint_to_now(iss_data, current_date_and_time)
     stateVector = get_stateVector(download_iss_data())
 
     #instantaneous speed:
@@ -351,13 +348,12 @@ def return_now_info():
     y_dot_inst = float(stateVector[closest_value_index]['Y_DOT']['#text'])
     z_dot_inst = float(stateVector[closest_value_index]['Z_DOT']['#text'])
 
-    speed_inst = speed_calculator(x_dot_inst, y_dot_inst, z_dot_inst)
-    ret_speed =  str(speed_inst)
-    ret_epoch = str(stateVector[closest_value_index]['EPOCH'])
+    speed_inst = str(speed_calculator(x_dot_inst, y_dot_inst, z_dot_inst))
+    specific_epoch = str(stateVector[closest_value_index]['EPOCH'])
     
-    location = location_info(ret_epoch)
+    location = location_info(specific_epoch)
     
-    all_info = {'instantaneous_speed' : ret_speed, **location}
+    all_info = {'instantaneous_speed' : speed_inst, **location}
     
     return jsonify(all_info)
 
