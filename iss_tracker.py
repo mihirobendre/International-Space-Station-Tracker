@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 
+import time
+from astropy import coordinates
+from astropy import units
+from astropy.time import Time
 import requests
 import xmltodict
 import pprint
 import logging
 from datetime import datetime
 import math
-from flask import Flask, request
+from flask import Flask, request, jsonify
+
+from geopy.geocoders import Nominatim
 
 app = Flask(__name__)
 
@@ -54,6 +60,46 @@ def get_data():
     stateVector = full_data_dicts['ndm']['oem']['body']['segment']['data']['stateVector']
 
     return stateVector
+
+
+def location_info(epoch):
+
+    data = get_data()
+    sv = None
+    for item in data:
+        if item["EPOCH"] == epoch:
+            sv = item
+
+    if sv is None:
+        return "Epoch not found, please enter valid epoch value"
+
+    x = float(sv['X']['#text'])
+    y = float(sv['Y']['#text'])
+    z = float(sv['Z']['#text'])
+
+    # assumes epoch is in format '2024-067T08:28:00.000Z'
+    this_epoch=time.strftime('%Y-%m-%d %H:%m:%S', time.strptime(sv['EPOCH'][:-5], '%Y-%jT%H:%M:%S'))
+
+    cartrep = coordinates.CartesianRepresentation([x, y, z], unit=units.km)
+    gcrs = coordinates.GCRS(cartrep, obstime=this_epoch)
+    itrs = gcrs.transform_to(coordinates.ITRS(obstime=this_epoch))
+    loc = coordinates.EarthLocation(*itrs.cartesian.xyz)
+    my_lat = loc.lat.value
+    my_lon = loc.lon.value
+    my_alt = loc.height.value
+
+    geocoder = Nominatim(user_agent='iss_tracker')
+    geoloc = geocoder.reverse((my_lat, my_lon), zoom=15, language='en')
+
+    response_data = {
+        'latitude': my_lat,
+        'longitude': my_lon,
+        'altitude': my_alt,
+        'geolocation': str(geoloc)
+    }
+
+    return response_data
+
 
 @app.route('/epochs', methods = ['GET'])
 def epochs_general():
@@ -197,9 +243,48 @@ def specific_epoch_speed(epoch):
 
     return "Epoch not found"
 
+@app.route('/epochs/<epoch>/location', methods = ['GET'])
+def return_location(epoch):
+
+    data = get_data()
+    sv = None
+    for item in data:
+        if item["EPOCH"] == epoch:
+            sv = item
+    
+    if sv is None:
+        return "Epoch not found, please enter valid epoch value"
+
+    x = float(sv['X']['#text'])
+    y = float(sv['Y']['#text'])
+    z = float(sv['Z']['#text'])
+
+    # assumes epoch is in format '2024-067T08:28:00.000Z'
+    this_epoch=time.strftime('%Y-%m-%d %H:%m:%S', time.strptime(sv['EPOCH'][:-5], '%Y-%jT%H:%M:%S'))
+
+    cartrep = coordinates.CartesianRepresentation([x, y, z], unit=units.km)
+    gcrs = coordinates.GCRS(cartrep, obstime=this_epoch)
+    itrs = gcrs.transform_to(coordinates.ITRS(obstime=this_epoch))
+    loc = coordinates.EarthLocation(*itrs.cartesian.xyz)
+    my_lat = loc.lat.value
+    my_lon = loc.lon.value
+    my_alt = loc.height.value
+    
+    geocoder = Nominatim(user_agent='iss_tracker')
+    geoloc = geocoder.reverse((my_lat, my_lon), zoom=15, language='en')
+
+    
+    response_data = {
+        'latitude': my_lat,
+        'longitude': my_lon,
+        'altitude': my_alt,
+        'geolocation': str(geoloc)
+    } 
+
+    return jsonify(response_data)
 
 @app.route('/now',methods = ['GET'])
-def epoch_and_speed_now():
+def return_now_info():
     """
     Calculates the closest epoch to the current time and the instantaneous speed at that epoch.
 
@@ -275,10 +360,14 @@ def epoch_and_speed_now():
     z_dot_inst = float(stateVector[closest_value_index]['Z_DOT']['#text'])
 
     speed_inst = speed_calculator(x_dot_inst, y_dot_inst, z_dot_inst)
-    ret_speed_string = "Instantaneous speed at closest epoch: " + str(speed_inst)
-    ret_epoch = "Closest epoch to now: " + str(stateVector[closest_value_index])
-
-    return ret_epoch + '\n' + ret_speed_string + '\n'
+    ret_speed_string =  str(speed_inst)
+    ret_epoch = str(stateVector[closest_value_index]['EPOCH'])
+    
+    location = location_info(ret_epoch)
+    
+    all_info = {'instantaneous_speed' : ret_speed_string, **location}
+    
+    return jsonify(all_info)
 
 #configure logging
 logging.basicConfig(level='INFO')
