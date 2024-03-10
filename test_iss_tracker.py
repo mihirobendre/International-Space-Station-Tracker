@@ -92,7 +92,9 @@ def test_location_info(epoch):
 def test_specific_epoch_speed(epoch):
     assert specific_epoch_speed(epoch) == '7.6516394881106065'
 
-test_datetime = datetime(2024, 3, 8, 12, 0, 0)
+@pytest.fixture
+def test_datetime():
+    return datetime(2024, 3, 8, 12, 0, 0)
 
 def test_closest_datapoint_to_now(sample_xml_data, test_datetime):
     closest_index = calculate_closest_datapoint_to_now(sample_xml_data, test_datetime)
