@@ -158,7 +158,6 @@ def specific_epoch_speed(epoch: str) -> str:
 
     return "Epoch not found"
 
-d
 def calculate_closest_datapoint_to_now(iss_data: bytes, current_date_and_time: datetime) -> int:
     """
     Calculates the closest data point to the current time from the ISS data.
