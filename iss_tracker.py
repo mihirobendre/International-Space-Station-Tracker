@@ -250,7 +250,7 @@ def print_comment():
     '''
     Prints comment string from data
     '''
-    full_data_dicts = fetch_all_data
+    full_data_dicts = fetch_all_data()
 
     # now, printing statement about the range of data from 1st and last epochs
     comment = full_data_dicts['ndm']['oem']['body']['segment']['data']['COMMENT']
