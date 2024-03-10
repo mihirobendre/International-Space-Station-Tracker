@@ -157,7 +157,7 @@ def calculate_closest_datapoint_to_now(iss_data, current_date_and_time):
     stateVector = get_stateVector(iss_data)
 
     # Specific date
-    year_first_day = datetime(current_date.year, 1, 1)
+    year_first_day = datetime(current_date_and_time.year, 1, 1)
 
     # Current date
     current_date = current_date_and_time.date()
