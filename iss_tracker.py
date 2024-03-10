@@ -309,7 +309,7 @@ def return_speed(epoch):
     Returns final speed
     '''
 
-    speed = "Speed: " + specific_epoch_speed(epoch)
+    speed = "Speed: " + specific_epoch_speed(epoch) + '\n'
     return speed
 
 @app.route('/epochs/<epoch>/location', methods = ['GET'])
