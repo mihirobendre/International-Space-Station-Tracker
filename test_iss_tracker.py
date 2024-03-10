@@ -118,6 +118,13 @@ def test_print_header():
     assert response.status_code == 200
     assert isinstance(response.json(), dict)
 
+def test_print_metadata():
+    response = requests.get('http://localhost:5000/metadata')
+    assert response.status_code == 200
+    assert isinstance(response.json(), dict)
+
+
+
 
 
     
