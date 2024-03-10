@@ -27,7 +27,7 @@ def speed_calculator(x_vel, y_vel, z_vel):
     '''
     Calculate the magnitude of velocity (speed) given its components in three dimensions.
 
-    Parameters:
+    Args:
     x_vel (float): The velocity component along the x-axis.
     y_vel (float): The velocity component along the y-axis.
     z_vel (float): The velocity component along the z-axis.
@@ -42,6 +42,7 @@ def speed_calculator(x_vel, y_vel, z_vel):
 def fetch_all_data():
     '''
     Fetches and parses International Space Station (ISS) coordinates data from NASA's public API, converting into list of dictionaries.
+    Returns: list of dicts, of all the ISS data converted to to dictionary list (from xml format)
     '''
     response = requests.get(url = 'https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml')
     status_code = response.status_code
@@ -61,7 +62,7 @@ def get_stateVector():
     #fetching and parsing the data
 
     """
-    Returns a list of dictionaries containing the state vectors of the ISS at different epochs.
+    Returns: a list of dictionaries containing the state vectors of the ISS at different epochs.
     """
 
     full_data_dicts = fetch_all_data()
@@ -72,7 +73,11 @@ def get_stateVector():
     return stateVector
 
 def location_info(epoch):
-
+    '''
+    Calculates latitude, longitude, altitude and geolocation information about location of ISS.
+    Args: the epoch for which to calculate this information
+    Returns: dictionary containing location information.
+    '''
     data = get_stateVector()
     sv = None
     for item in data:
@@ -134,6 +139,10 @@ def specific_epoch_speed(epoch):
     return "Epoch not found"
 
 def calculate_closest_datapoint_to_now():
+    '''
+    General function for calculating the closest datapoint to now (time series data)
+    Returns: the index of this datapoint within stateVector
+    '''
     stateVector = get_stateVector()
 
     # then, print full epoch closest to now
@@ -171,7 +180,7 @@ def calculate_closest_datapoint_to_now():
             if hour == current_hour:
                 list_of_minutes.append({'minute_val':minute, 'index':stateVector.index(instance)})
 
-    closest_value = None
+
     closest_value_index = None
     min_difference = float('inf')
     
@@ -184,7 +193,7 @@ def calculate_closest_datapoint_to_now():
         difference = abs(min_in_list - current_min)
         if difference < min_difference:
             min_difference = difference
-            closest_value = min_in_list
+
             closest_value_index = index_of_min_in_list
 
 
@@ -238,6 +247,9 @@ def print_epochs():
 
 @app.route('/comment', methods = ['GET'])
 def print_comment():
+    '''
+    Prints comment string from data
+    '''
     response = requests.get(url = 'https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml')
     status_code = response.status_code
 
@@ -257,6 +269,9 @@ def print_comment():
 
 @app.route('/header', methods = ['GET'])
 def print_header():
+    '''
+    Prints header string
+    '''
     response = requests.get(url = 'https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml')
     status_code = response.status_code
 
@@ -275,7 +290,9 @@ def print_header():
 
 @app.route('/metadata', methods = ['GET'])
 def print_metadata():
-
+    '''
+    Prints metadata string
+    '''
     full_data_dicts = fetch_all_data
 
     # now, printing statement about the range of data from 1st and last epochs
@@ -306,11 +323,19 @@ def specific_epoch(epoch):
 
 @app.route('/epochs/<epoch>/speed',methods = ['GET'])
 def return_speed(epoch):
+    '''
+    Returns final speed
+    '''
+
     speed = "Speed: " + specific_epoch_speed(epoch)
     return speed
 
 @app.route('/epochs/<epoch>/location', methods = ['GET'])
 def return_location(epoch):
+
+    '''
+    Returns the final location
+    '''
 
     response_data = location_info(epoch)
 
