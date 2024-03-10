@@ -58,14 +58,14 @@ BASE_URL = 'http://localhost:5000'
 def test_download_iss_data():
     assert download_iss_data() is not None
 
-def test_xml_data_parser():
+def test_xml_data_parser(sample_xml_data):
     parsed_data = xml_data_parser(sample_xml_data)
     assert parsed_data['ndm']['oem']['body']['segment']['data']['stateVector'][0]['EPOCH'] == '2024-068T12:00:00.000Z'
     assert parsed_data['ndm']['oem']['body']['segment']['metadata']['OBJECT_NAME'] == 'ISS'
     assert parsed_data['ndm']['oem']['header']['CREATION_DATE'] == '2024-068T18:36:27.254Z'
     assert parsed_data['ndm']['oem']['body']['segment']['data']['COMMENT'] == 'Units are in kg and m^2'
     
-def test_get_stateVector():
+def test_get_stateVector(sample_xml_data):
     parsed_sv = get_stateVector(sample_xml_data)
     assert parsed_sv[0]['EPOCH'] == '2024-068T12:00:00.000Z'
     assert parsed_sv[0]["X"]['#text'] == '4'
