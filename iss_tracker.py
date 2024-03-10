@@ -275,7 +275,7 @@ def print_metadata():
     '''
     Prints metadata string
     '''
-    full_data_dicts = fetch_all_data
+    full_data_dicts = fetch_all_data()
 
     # now, printing statement about the range of data from 1st and last epochs
     metadata = full_data_dicts['ndm']['oem']['body']['segment']['metadata']
