@@ -81,6 +81,6 @@ def epoch():
 
 def test_location_info(epoch):
     assert location_info(epoch)['altitude'] == 434.1838505706133
-    assert location_info(epoch)['latitude'] == 434.1838505706133
+    assert location_info(epoch)['latitude'] == -51.72659878401766
     assert location_info(epoch)['longitude'] == 434.1838505706133
     assert location_info(epoch)['geolocation'] == 434.1838505706133
