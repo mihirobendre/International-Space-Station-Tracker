@@ -85,4 +85,3 @@ def test_location_info(epoch):
     assert location_info(epoch)['longitude'] == 12.962791887166693
     assert location_info(epoch)['geolocation'] == 'None'
 
-def test
