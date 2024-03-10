@@ -6,8 +6,6 @@ import pytest
 def test_speed_calculator():
     assert speed_calculator(1,2,3) == 3.7416573867739413
 
-var_a = 1
-
 sample_xml_data =  '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ndm>
     <oem id="CCSDS_OEM_VERS" version="2.0">
@@ -65,4 +63,6 @@ def test_xml_data_parser():
     assert parsed_data['ndm']['oem']['header']['CREATION_DATE'] == '2024-068T18:36:27.254Z'
     assert parsed_data['ndm']['oem']['body']['segment']['data']['COMMENT'] == 'Units are in kg and m^2'
     
+def test_get_stateVector():
+    parsed_sv = get_stateVector(sample_xml_data)
     

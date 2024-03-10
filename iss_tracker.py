@@ -69,14 +69,14 @@ def xml_data_parser(full_data_xml):
 
     return full_data_dicts
 
-def get_stateVector():
+def get_stateVector(xml_data):
     #fetching and parsing the data
 
     """
     Returns: a list of dictionaries containing the state vectors of the ISS at different epochs.
     """
 
-    full_data_dicts = xml_data_parser(download_iss_data())
+    full_data_dicts = xml_data_parser(xml_data)
 
     # now, printing statement about the range of data from 1st and last epochs
     stateVector = full_data_dicts['ndm']['oem']['body']['segment']['data']['stateVector']
@@ -89,7 +89,7 @@ def location_info(epoch):
     Args: the epoch for which to calculate this information
     Returns: dictionary containing location information.
     '''
-    data = get_stateVector()
+    data = get_stateVector(download_iss_data())
     sv = None
     for item in data:
         if item["EPOCH"] == epoch:
@@ -138,7 +138,7 @@ def specific_epoch_speed(epoch):
                               or a string indicating that the epoch was not found.
     """
 
-    data = get_stateVector()
+    data = get_stateVector(download_iss_data())
     for item in data:
         if item["EPOCH"] == epoch:
             x_vel = float(item['X_DOT']['#text'])
@@ -154,7 +154,7 @@ def calculate_closest_datapoint_to_now():
     General function for calculating the closest datapoint to now (time series data)
     Returns: the index of this datapoint within stateVector
     '''
-    stateVector = get_stateVector()
+    stateVector = get_stateVector(download_iss_data())
 
     # then, print full epoch closest to now
     current_date = datetime.now().date()
@@ -228,7 +228,7 @@ def print_epochs():
         List[Dict[str, Any]]: A list of dictionaries containing the ISS coordinates data for the specified range of epochs.
     """
 
-    data = get_stateVector()
+    data = get_stateVector(download_iss_data())
     
     offset = request.args.get('offset', 0)
     try:
@@ -272,7 +272,6 @@ def print_header():
     Prints header string
     '''
     
-
     full_data_dicts = xml_data_parser(download_iss_data())
 
     # now, printing statement about the range of data from 1st and last epochs
@@ -305,7 +304,7 @@ def specific_epoch(epoch):
                                     or a string indicating that the epoch was not found.
     """
 
-    data = get_stateVector()
+    data = get_stateVector(download_iss_data())
     for item in data:
         if item["EPOCH"] == epoch:
             return item
@@ -345,7 +344,7 @@ def return_now_info():
     """
 
     closest_value_index = calculate_closest_datapoint_to_now()
-    stateVector = get_stateVector()
+    stateVector = get_stateVector(download_iss_data())
 
     #instantaneous speed:
     x_dot_inst = float(stateVector[closest_value_index]['X_DOT']['#text'])
