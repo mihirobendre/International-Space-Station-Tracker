@@ -3,9 +3,9 @@ from iss_tracker import speed_calculator, download_iss_data, xml_data_parser, ge
 import requests
 import pytest
 from datetime import datetime
-import math
 
 
+# General functions:
 
 def test_speed_calculator():
     assert speed_calculator(1,2,3) == 3.7416573867739413
@@ -99,6 +99,14 @@ def test_datetime():
 def test_closest_datapoint_to_now(sample_xml_data, test_datetime):
     closest_index = calculate_closest_datapoint_to_now(sample_xml_data, test_datetime)
     assert closest_index == 0
+
+
+# Routes:
+    
+def test_print_epochs():
+    response = requests.get('http://localhost:5000/epochs')
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
 
 
     
