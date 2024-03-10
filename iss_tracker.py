@@ -67,7 +67,7 @@ def xml_data_parser(full_data_xml):
 
     full_data_dicts = xmltodict.parse(full_data_xml)
 
-    return jsonify(full_data_dicts)
+    return full_data_dicts
 
 def get_stateVector():
     #fetching and parsing the data
@@ -242,8 +242,6 @@ def print_epochs():
         limit = int(limit)
     except ValueError:
         return "Invalid limit parameter; limit must be an integer.\n"
-
-    return_data = []
     counter = 0
     
     result = []
