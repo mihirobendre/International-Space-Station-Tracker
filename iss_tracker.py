@@ -312,8 +312,9 @@ def return_speed(epoch):
     Returns final speed
     '''
 
-    speed = "Speed: " + specific_epoch_speed(epoch) + '\n'
-    return speed
+    speed = specific_epoch_speed(epoch)
+    
+    return jsonify({'speed': speed})
 
 @app.route('/epochs/<epoch>/location', methods = ['GET'])
 def return_location(epoch):
