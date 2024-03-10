@@ -21,30 +21,28 @@ app = Flask(__name__)
 Generic Functions:
 '''
 
-
-def speed_calculator(x_vel, y_vel, z_vel):
-
-    '''
+def speed_calculator(x_vel: float, y_vel: float, z_vel: float) -> float:
+    """
     Calculate the magnitude of velocity (speed) given its components in three dimensions.
 
     Args:
-    x_vel (float): The velocity component along the x-axis.
-    y_vel (float): The velocity component along the y-axis.
-    z_vel (float): The velocity component along the z-axis.
+        x_vel (float): The velocity component along the x-axis.
+        y_vel (float): The velocity component along the y-axis.
+        z_vel (float): The velocity component along the z-axis.
 
     Returns:
-    float: The magnitude of velocity (speed) calculated using the Euclidean distance formula.
-    '''
-
+        float: The magnitude of velocity (speed) calculated using the Euclidean distance formula.
+    """
     speed = math.sqrt(x_vel**2 + y_vel**2 + z_vel**2)
     return speed
 
-def download_iss_data():
-    '''
-    Fetches International Space Station (ISS) coordinates data from NASA's public API
-    Args: none
-    Returns: downloaded xml data
-    '''
+def download_iss_data() -> bytes:
+    """
+    Fetches International Space Station (ISS) coordinates data from a public API provided by NASA.
+
+    Returns:
+        bytes: The raw XML data downloaded from the API.
+    """
     response = requests.get(url = 'https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml')
     status_code = response.status_code
 
@@ -58,22 +56,30 @@ def download_iss_data():
 
     return full_data_xml
 
-def xml_data_parser(full_data_xml):
-    '''
-    Converting xml data into list of dictionaries.
-    Args: requires xml data to begin with
-    Returns: list of dicts, of all the ISS data converted to to dictionary list (from xml format)
-    '''
+def xml_data_parser(full_data_xml: bytes) -> dict:
+    """
+    Parses XML data into a dictionary format.
+
+    Args:
+        full_data_xml (bytes): The raw XML data as bytes.
+
+    Returns:
+        dict: The XML data converted to a dictionary.
+    """
 
     full_data_dicts = xmltodict.parse(full_data_xml)
 
     return full_data_dicts
 
-def get_stateVector(xml_data):
-    #fetching and parsing the data
-
+def get_stateVector(xml_data: bytes) -> list:
     """
-    Returns: a list of dictionaries containing the state vectors of the ISS at different epochs.
+    Extracts state vector information from XML data.
+
+    Args:
+        xml_data (bytes): The raw XML data containing ISS position and velocity information.
+
+    Returns:
+        list: A list of dictionaries, each representing the state vector of the ISS at different epochs.
     """
 
     full_data_dicts = xml_data_parser(xml_data)
@@ -83,12 +89,16 @@ def get_stateVector(xml_data):
 
     return stateVector
 
-def location_info(epoch):
-    '''
-    Calculates latitude, longitude, altitude and geolocation information about location of ISS.
-    Args: the epoch for which to calculate this information
-    Returns: dictionary containing location information.
-    '''
+def location_info(epoch: str) -> dict:
+    """
+    Calculates latitude, longitude, altitude, and geolocation information of the ISS for a specific epoch.
+
+    Args:
+        epoch (str): The specific epoch time to retrieve location information for.
+
+    Returns:
+        dict: A dictionary containing the latitude, longitude, altitude, and geolocation information.
+    """
     data = get_stateVector(download_iss_data())
     sv = None
     for item in data:
@@ -126,7 +136,7 @@ def location_info(epoch):
     return response_data
 
 
-def specific_epoch_speed(epoch):
+def specific_epoch_speed(epoch: str) -> str:
     """
     Retrieves the speed of the ISS for a specific epoch.
 
@@ -134,8 +144,7 @@ def specific_epoch_speed(epoch):
         epoch (str): The epoch for which the ISS speed is requested.
 
     Returns:
-        Union[str, Response]: A string representation of the speed of the ISS for the specified epoch,
-                              or a string indicating that the epoch was not found.
+        str: The speed of the ISS for the specified epoch, or an error message if the epoch was not found.
     """
 
     data = get_stateVector(download_iss_data())
@@ -149,11 +158,18 @@ def specific_epoch_speed(epoch):
 
     return "Epoch not found"
 
-def calculate_closest_datapoint_to_now(iss_data, current_date_and_time):
-    '''
-    General function for calculating the closest datapoint to now (time series data)
-    Returns: the index of this datapoint within stateVector
-    '''
+d
+def calculate_closest_datapoint_to_now(iss_data: bytes, current_date_and_time: datetime) -> int:
+    """
+    Calculates the closest data point to the current time from the ISS data.
+
+    Args:
+        iss_data (bytes): The raw XML data containing ISS state vectors.
+        current_date_and_time (datetime): The current date and time.
+
+    Returns:
+        int: The index of the closest data point within the state vector.
+    """
     stateVector = get_stateVector(iss_data)
 
     # Specific date
@@ -207,20 +223,16 @@ def calculate_closest_datapoint_to_now(iss_data, current_date_and_time):
 
 
 '''
-Routes
+Routes:
 '''
 
 @app.route('/epochs', methods = ['GET'])
 def print_epochs():
     """
     Retrieves ISS coordinates data for a specified range of epochs.
-
-    Args:
+    Query parameters:
         offset (int): The starting index of the data to be returned (default is 0).
         limit (int): The maximum number of data points to be returned (default is the length of the data).
-
-    Returns:
-        List[Dict[str, Any]]: A list of dictionaries containing the ISS coordinates data for the specified range of epochs.
     """
 
     data = get_stateVector(download_iss_data())
@@ -290,13 +302,6 @@ def specific_epoch(epoch):
     
     """
     Retrieves ISS coordinates data for a specific epoch.
-
-    Args:
-        epoch (str): The epoch for which the ISS coordinates data is requested.
-
-    Returns:
-        Union[Dict[str, Any], str]: A dictionary containing the ISS coordinates data for the specified epoch,
-                                    or a string indicating that the epoch was not found.
     """
 
     data = get_stateVector(download_iss_data())
@@ -311,9 +316,9 @@ def return_speed(epoch):
     '''
     Returns final speed
     '''
-
-    speed = specific_epoch_speed(epoch)
     
+    speed = specific_epoch_speed(epoch)
+
     return jsonify({'speed': speed})
 
 @app.route('/epochs/<epoch>/location', methods = ['GET'])
@@ -331,12 +336,6 @@ def return_location(epoch):
 def return_now_info():
     """
     Calculates the closest epoch to the current time and the instantaneous speed at that epoch.
-
-    Args:
-        stateVector (List[Dict[str, Any]]): A list of dictionaries containing state vector data.
-
-    Returns:
-        str: A string representing the closest epoch to the current time and the instantaneous speed at that epoch.
     """
     iss_data = download_iss_data()
     current_date_and_time = datetime.now()
