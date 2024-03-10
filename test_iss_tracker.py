@@ -66,14 +66,3 @@ def test_xml_data_parser():
     assert parsed_data['ndm']['oem']['body']['segment']['data']['COMMENT'] == 'Units are in kg and m^2'
     
     
-'''
-    assert len(parsed_data) == 2
-    assert isinstance(parsed_data[0], dict)
-    assert parsed_data[0]["EPOCH"] == '2024-045T12:04:00.000Z'
-    assert parsed_data[0]["X"] == 100.0
-    assert parsed_data[0]["Y"] == 200.0
-    assert parsed_data[0]["Z"] == 300.0
-    assert parsed_data[0]["X_DOT"] == 1.0
-    assert parsed_data[0]["Y_DOT"] == 2.0
-    assert parsed_data[0]["Z_DOT"] == 3.0
-'''
