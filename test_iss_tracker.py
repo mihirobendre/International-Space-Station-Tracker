@@ -6,9 +6,7 @@ import pytest
 def test_speed_calculator():
     assert speed_calculator(1,2,3) == 3.7416573867739413
 
-@pytest.fixture
-def sample_xml_data():
-    return b'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+sample_xml_data =  '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ndm>
     <oem id="CCSDS_OEM_VERS" version="2.0">
         <header>
