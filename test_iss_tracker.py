@@ -1,6 +1,6 @@
 
 from iss_tracker import speed_calculator, download_iss_data, xml_data_parser, get_stateVector, location_info, specific_epoch_speed, calculate_closest_datapoint_to_now
-from flask import jsonify
+import requests
 import pytest
 
 def test_speed_calculator():
@@ -80,4 +80,4 @@ def epoch():
     return '2024-068T12:00:00.000Z'
 
 def test_location_info(epoch):
-    assert jsonify(location_info(epoch))['altitude'] == 10
+    assert location_info(epoch)['altitude'] == 10
