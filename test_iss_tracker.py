@@ -29,13 +29,22 @@ sample_xml_data =  '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
                 <data>
                     <COMMENT>Units are in kg and m^2</COMMENT>
                     <stateVector>
+                        <EPOCH>2024-068T12:00:00.000Z</EPOCH>
+                        <X units="km">4</X>
+                        <Y units="km">5</Y>
+                        <Z units="km">6</Z>
+                        <X_DOT units="km/s">7</X_DOT>
+                        <Y_DOT units="km/s">8</Y_DOT>
+                        <Z_DOT units="km/s">9</Z_DOT>
+                    </stateVector>
+                    <stateVector>
                         <EPOCH>2024-068T12:04:00.000Z</EPOCH>
-                        <X units="km">3981.1591172114599</X>
-                        <Y units="km">1817.4273840374899</Y>
-                        <Z units="km">-5202.0706291529305</Z>
-                        <X_DOT units="km/s">-1.5956939400996299</X_DOT>
-                        <Y_DOT units="km/s">7.3610565465317999</Y_DOT>
-                        <Z_DOT units="km/s">12</Z_DOT>
+                        <X units="km">1</X>
+                        <Y units="km">2</Y>
+                        <Z units="km">-3</Z>
+                        <X_DOT units="km/s">4</X_DOT>
+                        <Y_DOT units="km/s">5</Y_DOT>
+                        <Z_DOT units="km/s">6</Z_DOT>
                     </stateVector>
                 </data>
             </segment>
@@ -51,7 +60,7 @@ def test_download_iss_data():
 
 def test_xml_data_parser():
     parsed_data = xml_data_parser(sample_xml_data)
-    assert parsed_data['ndm']['oem']['body']['segment']['data']['stateVector'] == '2024-068T12:04:00.000Z'
+    assert parsed_data['ndm']['oem']['body']['segment']['data']['stateVector'][0] == '2024-068T12:04:00.000Z'
     #['oem']['body']['segment']['data']['stateVector'][0]['EPOCH']
 
 '''
