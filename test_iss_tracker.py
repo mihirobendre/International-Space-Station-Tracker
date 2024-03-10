@@ -123,7 +123,57 @@ def test_print_metadata():
     assert response.status_code == 200
     assert isinstance(response.json(), dict)
 
+def test_epochs_route():
+    response = requests.get('http://localhost:5000/epochs')
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
 
+
+# Test function for the /epochs?limit=int&offset=int route
+def test_epochs_limit_offset_route():
+    response = requests.get('http://localhost:5000/epochs?limit=5&offset=0')
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
+    assert len(response.json()) == 5
+
+# Test function for the /epochs/<epoch> route
+def test_epochs_epoch_route():
+    response1 = requests.get('http://localhost:5000/epochs')
+    if response1.status_code == 200:
+        epoch = response1.json()[0]['EPOCH']
+        response2 = requests.get('http://localhost:5000/epochs/' + epoch)
+        assert response2.status_code == 200
+        assert isinstance(response2.json(), dict)
+
+# Test function for the /epochs/<epoch>/speed route
+def test_epochs_epoch_speed_route():
+    response1 = requests.get('http://localhost:5000/epochs')
+    if response1.status_code == 200:
+        epoch = response1.json()[0]['EPOCH']
+        response2 = requests.get('http://localhost:5000/epochs/' + epoch + '/speed')
+        assert response2.status_code == 200
+        assert 'speed' in response2.json()
+
+# Test function for the /epochs/<epoch>/location route
+def test_epochs_epoch_location_route():
+    response1 = requests.get('http://localhost:5000/epochs')
+    if response1.status_code == 200:
+        epoch = response1.json()[0]['EPOCH']
+        response2 = requests.get('http://localhost:5000/epochs/' + epoch + '/location')
+        assert response2.status_code == 200
+        assert 'latitude' in response2.json()
+        assert 'longitude' in response2.json()
+        assert 'altitude' in response2.json()
+        assert 'geoposition' in response2.json()
+
+# Test function for the /now route
+def test_now_route():
+    response = requests.get('http://localhost:5000/now')
+    assert response.status_code == 200
+    assert 'latitude' in response.json()
+    assert 'longitude' in response.json()
+    assert 'altitude' in response.json()
+    assert 'geoposition' in response.json()
 
 
 
