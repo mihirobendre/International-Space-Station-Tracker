@@ -76,4 +76,4 @@ def test_get_stateVector():
 epoch = '2024-068T12:00:00.000Z'
 
 def test_location_info(epoch):
-    assert location_info(epoch) == 'hello'
+    assert location_info(epoch) == 'Epoch not found, please enter valid epoch value'
