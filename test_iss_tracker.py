@@ -86,4 +86,4 @@ def test_location_info(epoch):
     assert location_info(epoch)['geolocation'] == 'None'
 
 def test_specific_epoch_speed(epoch):
-    assert specific_epoch_speed(epoch) == 2
+    assert specific_epoch_speed(epoch) == '7.6516394881106065'
