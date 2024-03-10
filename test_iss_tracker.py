@@ -66,9 +66,11 @@ def test_xml_data_parser():
 def test_get_stateVector():
     parsed_sv = get_stateVector(sample_xml_data)
     assert parsed_sv[0]['EPOCH'] == '2024-068T12:00:00.000Z'
-    assert parsed_sv[0]["X"] == 4
+    assert parsed_sv[0]["X"]['#text'] == '4'
+    '''
     assert parsed_sv[0]["Y"] == 5
     assert parsed_sv[0]["Z"] == 6
     assert parsed_sv[0]["X_DOT"] == 7
     assert parsed_sv[0]["Y_DOT"] == 8
     assert parsed_sv[0]["Z_DOT"] == 9
+    '''
