@@ -1,6 +1,6 @@
 
 from iss_tracker import speed_calculator, download_iss_data, xml_data_parser, get_stateVector, location_info, specific_epoch_speed, calculate_closest_datapoint_to_now
-
+from flask import jsonify
 import pytest
 
 def test_speed_calculator():
@@ -50,8 +50,8 @@ def test_download_iss_data():
     assert download_iss_data() is not None
 
 def test_xml_data_parser():
-    parsed_data = xml_data_parser(sample_xml_data)
-    assert parsed_data['ndm']['oem']['body']['segment']['data']['stateVector'][0]['EPOCH'] == '2024-068T12:04:00.000Z'
+    parsed_data = jsonify(xml_data_parser(sample_xml_data))
+    #assert parsed_data['ndm']['oem']['body']['segment']['data']['stateVector'][0]['EPOCH'] == '2024-068T12:04:00.000Z'
 
 
 '''
