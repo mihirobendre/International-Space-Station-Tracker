@@ -39,10 +39,11 @@ def speed_calculator(x_vel, y_vel, z_vel):
     speed = math.sqrt(x_vel**2 + y_vel**2 + z_vel**2)
     return speed
 
-def fetch_all_data():
+def download_iss_data():
     '''
-    Fetches and parses International Space Station (ISS) coordinates data from NASA's public API, converting into list of dictionaries.
-    Returns: list of dicts, of all the ISS data converted to to dictionary list (from xml format)
+    Fetches International Space Station (ISS) coordinates data from NASA's public API
+    Args: none
+    Returns: downloaded xml data
     '''
     response = requests.get(url = 'https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml')
     status_code = response.status_code
@@ -51,8 +52,19 @@ def fetch_all_data():
         logger.info("Successfully fetched data")
     else:
         logger.error("Failed to fetch data")
+        return None
 
     full_data_xml = response.content
+
+    return full_data_xml
+
+def xml_data_parser():
+    '''
+    Converting xml data into list of dictionaries.
+    Args: requires xml data to begin with
+    Returns: list of dicts, of all the ISS data converted to to dictionary list (from xml format)
+    '''
+    full_data_xml = download_iss_data()
 
     full_data_dicts = xmltodict.parse(full_data_xml)
 
@@ -65,7 +77,7 @@ def get_stateVector():
     Returns: a list of dictionaries containing the state vectors of the ISS at different epochs.
     """
 
-    full_data_dicts = fetch_all_data()
+    full_data_dicts = xml_data_parser()
 
     # now, printing statement about the range of data from 1st and last epochs
     stateVector = full_data_dicts['ndm']['oem']['body']['segment']['data']['stateVector']
@@ -250,7 +262,7 @@ def print_comment():
     '''
     Prints comment string from data
     '''
-    full_data_dicts = fetch_all_data()
+    full_data_dicts = xml_data_parser()
 
     # now, printing statement about the range of data from 1st and last epochs
     comment = full_data_dicts['ndm']['oem']['body']['segment']['data']['COMMENT']
@@ -264,7 +276,7 @@ def print_header():
     '''
     
 
-    full_data_dicts = fetch_all_data()
+    full_data_dicts = xml_data_parser()
 
     # now, printing statement about the range of data from 1st and last epochs
     header = full_data_dicts['ndm']['oem']['header']
@@ -275,7 +287,7 @@ def print_metadata():
     '''
     Prints metadata string
     '''
-    full_data_dicts = fetch_all_data()
+    full_data_dicts = xml_data_parser()
 
     # now, printing statement about the range of data from 1st and last epochs
     metadata = full_data_dicts['ndm']['oem']['body']['segment']['metadata']
