@@ -19,7 +19,9 @@ The goal of the ISS Tracker project is to develop a Flask web application that p
 
 ### 1. Accessing the Data
 
-ISS data can be accessed through NASA's public data repository. The provided URL directs to an XML file with the ISS's position and velocity information, available in the Mean of J2000 (J2K) frame and updated every four minutes across a span of 15 days.
+ISS data can be accessed through NASA's public data repository. The provided URL directs to an XML file with the ISS's position and velocity information, available in the Mean of J2000 (J2K) frame and updated every four minutes across a span of 15 days. Link:
+- [ISS Trajectory Data on NASA Spot the Station](https://spotthestation.nasa.gov/trajectory_data.cfm)
+
 
 ### 2. Building the Container
 
@@ -57,5 +59,6 @@ To remove the Docker container and free up resources, run bash command
 The application's output provides insights into the ISS's location, speed, and trajectory, enabling users to track its movement in real time.
 
 ## Acknowledgments
-This project uses NASA's public data and some parts of the code, and this README file include contributions from ChatGPT by OpenAI for documentation and code comments. The geodetic calculations have been verified using an online tracker.
+This project uses NASA's public data and some parts of the code, and this README file include contributions from ChatGPT by OpenAI for documentation and code comments. The geodetic calculations have been verified using an online tracker. Link:
+- [Track ISS on N2YO](https://www.n2yo.com/?s=90027)
 
