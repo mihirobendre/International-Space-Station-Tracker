@@ -32,7 +32,7 @@ To containerize the ISS Tracker, follow these steps:
 ### 3. Running Unit Tests
 
 To perform unit tests within the Docker container, use the bash command:
-docker exec -it iss_tracker /bin/bash
+`docker exec -it iss_tracker /bin/bash`
 
 ### 4. Accessing the Routes
 
@@ -48,9 +48,9 @@ GET /epochs/<epoch>/location: Geolocation data for an epoch. May return "Address
 ### 5. Free-up space
 
 To remove the Docker container and free up resources, run bash command:
-
-docker-compose down
-Verify removal with docker ps -a.
+`docker-compose down`
+Verify removal with:
+`docker ps -a.`
 
 ## Interpretation of outputs
 The application's output provides insights into the ISS's location, speed, and trajectory, enabling users to track its movement in real time.
