@@ -38,19 +38,20 @@ To perform unit tests within the Docker container, use the bash command:
 
 The Flask application supports various routes for interacting with the ISS data:
 
-GET /now: Current epoch's speed and position.
-GET /epochs: Access to the full dataset.
-GET /epochs?limit=int&offset=int: Dataset access with pagination.
-GET /epochs/<epoch>: Data for a specific epoch.
-GET /epochs/<epoch>/speed: Speed at a given epoch.
-GET /epochs/<epoch>/location: Geolocation data for an epoch. May return "Address Not Found" over oceans.
+- **GET `/now`**: Current epoch's speed and position.
+- **GET `/epochs`**: Access to the full dataset.
+- **GET `/epochs?limit=int&offset=int`**: Dataset access with pagination.
+- **GET `/epochs/<epoch>`**: Data for a specific epoch.
+- **GET `/epochs/<epoch>/speed`**: Speed at a given epoch.
+- **GET `/epochs/<epoch>/location`**: Geolocation data for an epoch. May return "Address Not Found" over oceans.
+
 
 ### 5. Free-up space
 
-To remove the Docker container and free up resources, run bash command:
+To remove the Docker container and free up resources, run bash command
 `docker-compose down`
-Verify removal with:
-`docker ps -a.`
+ and verify removal with
+`docker ps -a`.
 
 ## Interpretation of outputs
 The application's output provides insights into the ISS's location, speed, and trajectory, enabling users to track its movement in real time.
