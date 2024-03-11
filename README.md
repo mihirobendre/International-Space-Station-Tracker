@@ -1,51 +1,61 @@
+# ISS Tracker
 
-# ISS Velocity Analysis
+## Project Objective
 
-## Description
+The goal of the ISS Tracker project is to develop a Flask web application that provides real-time tracking and analysis of the International Space Station (ISS). It achieves this by fetching live data from NASA's public repository, parsing the XML data, and calculating metrics such as the ISS's current speed and geographic position.
 
-This project analyzes the velocity data of the International Space Station (ISS). The code fetches velocity data from a NASA API, calculates various metrics, and provides insights into the velocity patterns of the ISS.
+## Contents
 
-## Data Source Description
+- **Dockerfile**: Setup for the Docker environment.
+- **docker-compose.yml**: Configuration for Docker Compose.
+- **iss_tracker.py**: The main script for ISS tracking and analysis.
+- **requirements.txt**: Lists the necessary Python packages.
+- **test/**: Folder containing unit tests.
+  - **test_iss_tracker.py**: Script for unit testing the main application.
+- **diagram.png**: Diagram illustrating the project's system architecture.
+- **README.md**: Documentation providing details and setup instructions for the project.
 
-The velocity data of the ISS is obtained from the NASA public data repository. The data is provided in XML format and contains velocity components in three dimensions (x, y, z) at various epochs.
+## Instructions
 
-To access the original data set, you can visit the following link:
-[ISS Velocity Data](https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml)
+### 1. Accessing the Data
 
-## Building and Running the Container
+ISS data can be accessed through NASA's public data repository. The provided URL directs to an XML file with the ISS's position and velocity information, available in the Mean of J2000 (J2K) frame and updated every four minutes across a span of 15 days.
 
-To build and run the container for this code, follow these steps:
+### 2. Building the Container
 
-1. **Clone the Repository**: Clone this repository to your local machine.
+To containerize the ISS Tracker, follow these steps:
+1. Ensure Docker is installed on your machine.
+2. Use a terminal to navigate to the directory with the Dockerfile and Python scripts.
+3. Execute `docker-compose up -d` to build the Docker image and start the Flask app in the background.
+4. Confirm the container is running on port 5000 using `docker ps -a` and list all Docker images with `docker images`.
 
-2. **Navigate to the Directory**: Open a terminal or command prompt and navigate to the directory containing the project files.
+### 3. Running Unit Tests
 
-3. **Build the Container**: Run the following command to build the Docker container:
-   ```bash
-   docker build -t iss-velocity-analysis .
+To perform unit tests within the Docker container, use:
+```bash
+docker exec -it iss_tracker /bin/bash
 
-4. **Run the Container**: Once the container is built, you can run it using the following command:
-   ```bash
-   docker run -it iss-velocity-analysis
-5. Run the flask app, using python3 iss_tracker.py
-6. Copy the link and curl it from another terminal, testing various commands. 
+### 4. Accessing the Routes
 
-After running the container, the Python3 script will be executed, and various metrics related to the velocity of the ISS will be displayed in the console. Refer to the "Output and Interpretation" section for details on what to expect from the output.
+The Flask application supports various routes for interacting with the ISS data:
 
+GET /now: Current epoch's speed and position.
+GET /epochs: Access to the full dataset.
+GET /epochs?limit=int&offset=int: Dataset access with pagination.
+GET /epochs/<epoch>: Data for a specific epoch.
+GET /epochs/<epoch>/speed: Speed at a given epoch.
+GET /epochs/<epoch>/location: Geolocation data for an epoch. May return "Address Not Found" over oceans.
 
-## Output and Interpretation
+### 5. Free-up space
 
-Running the containerized Python3 script will output various metrics related to the velocity of the ISS. Here's what to expect:
+To remove the Docker container and free up resources, run bash command:
+```bash
+docker-compose down
+Verify removal with docker ps -a.
 
-Length of stateVector: Total number of velocity data points.
-First and Last Epoch: Timestamps of the first and last data points.
-Range of stateVector (days): Duration covered by the velocity data.
-Current date and time: Current system date and time.
-List of minute values within the current hour: Velocity data points within the current hour.
-Closest value: Closest velocity data point to the current minute.
-Closest value's index: Index of the closest velocity data point.
-Instantaneous speed: Speed calculated from the closest velocity data point.
-Average speed of ISS: Average speed calculated from all velocity data points.
-The output provides insights into the velocity patterns of the ISS, helping to understand its movement in space.
+## Interpretation of outputs
+The application's output provides insights into the ISS's location, speed, and trajectory, enabling users to track its movement in real time.
 
-Created using the help of ChatGPT
+## Acknowledgments
+This project uses NASA's public data and some parts of the code, and this README file include contributions from ChatGPT by OpenAI for documentation and code comments. The geodetic calculations have been verified using an online tracker.
+
